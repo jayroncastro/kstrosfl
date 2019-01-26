@@ -48,10 +48,19 @@ Failover de links
     
     Este binário deverá possuir permissão de leitura no caminho especificado na variável caminho_iproute, bem como em todos os arquivos que ficam dentro da pasta /etc/kstrosfl, também deverá ter permissão de escrita no diratório /opt/kstrosfl pois é nesse diretório que kstrosfl faz o proceidmento de backup e restore do arquivo rt_tables original.
     
-    + A script kstrosfl -> Este script é responsável por iniciar e parar o funcionamento de kstrosfl, possuindo todas as entradas padrõe
-s, como start, stop, restart e status.
+    + A script kstrosfl -> Este script é responsável por iniciar e parar o funcionamento de kstrosfl, possuindo todas as entradas padrões, como start, stop, restart e status.
     
 3 - Funcionamento
+    
+    A lógica de funcionamento de kstrosfl baseia-se em ter um link principal e até quatro links a serem usados como backup.
+    
+    Sempre será dado priorodade na saída pelo link principal e para um link ser tratado como principal o mesmo deverá ser o primeiro link a ser informado no arquivo opcoes.links.conf.
+    
+    Todos os links informados após o link principal serão tratados como links de backup e o kstrosfl irá obeder a ordem de inserção, dessa forma, o primeiro link será o link zero, o segundo link será o link um e assim sucessivamente.
+    
+    A cada loop realizado o kstrosfl executará todos os testes para perceber se os links estão ativos e gravará todas as mensagens no arquivo de log so sistema e para o usuário monitorar o funcionamento basta abrir o arquivo de log conforma abaixo:
+    
+    # tail -f /var/log/syslog
 
 4 - Instalação
 
