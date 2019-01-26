@@ -11,7 +11,7 @@ Failover de links
     
     A ferramenta foi desenvolvida sob o codinome "kstrosfl" e possui um monitoramento ativo para até 5 links de dados.
 
-2 - A ferramenta
+2 - A ferramenta:
     
     A ferramenta "kstrosfl" é formada por 4 arquivos principais, listados abaixo em seus respectivos diretórios:
     
@@ -50,7 +50,7 @@ Failover de links
     
     + A script kstrosfl -> Este script é responsável por iniciar e parar o funcionamento de kstrosfl, possuindo todas as entradas padrões, como start, stop, restart e status.
     
-3 - Funcionamento
+3 - Funcionamento:
     
     A lógica de funcionamento de kstrosfl baseia-se em ter um link principal e até quatro links a serem usados como backup.
     
@@ -62,6 +62,50 @@ Failover de links
     
     # tail -f /var/log/syslog
 
-4 - Instalação
+4 - Instalação:
+    
+    A ferramenta kstrosfl está compilada como um pacote deb e dessa forma somente foi testada em sistemas GNU/Linux Debian, mas possui um arquivo com a extensão tar para que o mesmo seja instalado manualmente em outras distribuições seguindo a localização dos arquivos especificadas anteriormente.
+    
+    Para instalação em sistemas GNU/Linux Debian, após realizar o download do arquivo .deb deverá ser instalado usando o comando dpkg, conforme linha de comando abaixo.
+    
+    # dpkg -i "pacote .deb"
+    
+    Para instalações da ferramenta diretamente pelos arquivos é necessário um passo adicional que será a instalação do binário kstrosfl como um serviço, no GNU/Linux Debian isso é conseguido pelo comando insserv, mas isso pode mudar conforme sua distribuição.
 
-5 - Configuração
+5 - Configuração:
+    
+    Para configurar o kstrosfl deverá ser editado somente os arquivos que constam dentro do diretório /etc/kstrosfl
+    
+    É fortemente recomendado editar somente o arquivo /etc/kstrosfl/opcoes.links.conf pois é justamente o arquivo que armazena os links a serem usados como redundância.
+    
+    O arquivo /etc/kstrosfl/opcoes.conf deverá ser editado somente caso haja a necessidade de alterar alguma funcionalidade de uso geral da ferramenta, não sendo recomendado por se tratar de valores padrão.
+    
+    Após finalziar toda a configuração do kstrosfl o mesmo poderá ser iniciado pelo comando abaixo:
+    
+    # service kstrosfl start
+    
+    Devido a ferramenta ser instalada como serviço a mesma irá ser incializada juntamente com o servidor
+   
+6 - Exemplo:
+
+    Imagine o seguinte cenário, a empresa Restaurante Amarelinho possui três liks de internet sendo o primeiro link com velocidade 1Mb da operadora Net, o segundo link com velocidade 256Kb da operadora Oi e o terceiro com velocidade 5Mb da operadora Vivo.
+    
+    O link da 1Mb possui configuração 172.16.1.0/30, o link de 256Kb possui a configuração 172.16.2.0/30 e o link de 5Mb possui configuração 172.16.3.0/30.
+    
+    O link de 1Mb está ligado na interface eth0 com o IP 172.16.1.1/30, o link de 256Kb está ligado na interface eth1 com o IP 172.16.2.1/30 e o link de 5Mb está ligado na interface eth2 com IP 172.16.3.1/30.
+    
+    Analisando o cenário proposto é fortemente recomendado usar o link principal como o link que possui a banda de 5Mb, como primeiro link de backup 1Mb e como segundo link de backup 256Kb.
+    
+    Para configurar o kstrosfl o arquivo /etc/kstrosfl/opcoes.links.conf deverá ser editado conforme abaixo e configurado seguindo as orientações dadas.
+    
+    Editando o arquivo:
+    
+    # vi /etc/kstrosfl/opcoes.links.conf
+    
+    Configurando o arquivo:
+    
+    vivo:eth2:172.16.3.2
+    net:eth0:172.16.1.2
+    oi:172.16.2.2
+    
+    Após realizar as configurações acima o kstrosfl está devidamente configurado para trabalhar a redundância dos links.
