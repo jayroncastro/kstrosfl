@@ -1,0 +1,2 @@
+# kstrosfl
+Failover de links
